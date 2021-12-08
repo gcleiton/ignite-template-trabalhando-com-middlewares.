@@ -24,7 +24,18 @@ function checksExistsUserAccount(request, response, next) {
 }
 
 function checksCreateTodosUserAvailability(request, response, next) {
-  // Complete aqui
+  const { user } = request
+
+  const freePlanCondition = !user.pro && user.todos < 10 
+  const canUserCreateTodos = freePlanCondition || user.pro
+
+  if(!canUserCreateTodos) {
+    return response.status(403).json({
+      error: 'The user has reached the amount of all available for the free plan'
+    })
+  }
+
+  return next()
 }
 
 function checksTodoExists(request, response, next) {
